@@ -26,7 +26,7 @@ def net_fn(batch: Batch) -> jnp.ndarray:
   """
   x = normalize(batch[0])
   
-  # Do NOT alter the architecture definition below.
+  # architecture definition
   net = hk.Sequential([
       hk.Conv2D(output_channels=6*3, kernel_shape=(5,5)),
       jax.nn.relu,
@@ -80,7 +80,7 @@ def compute_loss(params: hk.Params, batch: Batch) -> jnp.ndarray:
   logits = net.apply(params, batch)
   labels = jax.nn.one_hot(y, 10)
 
-  # TODO: add code below to compute the l2_loss variable
+  # compute the l2_loss variable
   l2_loss = sum(jnp.sum(jnp.square(p)) for p in jax.tree_util.tree_leaves(params))
   weighted_l2_loss = 0.5 * l2_loss 
   
@@ -102,7 +102,7 @@ def compute_accuracy(params: hk.Params, batch: Batch) -> jnp.ndarray:
   """  
   predictions = net.apply(params, batch)
 
-  # TODO: add code below to compute the accuracy over the batch.
+  # compute the accuracy over the batch.
   accuracy = jnp.mean(jnp.argmax(predictions, axis=-1) == batch[1])  
   return accuracy
 
@@ -161,7 +161,7 @@ def normalize(images):
 # Train model
 net = hk.without_apply_rng(hk.transform(net_fn))
 
-# Do not change learning rate
+# learning rate
 opt = optax.adam(1e-3)
 
 train = load_dataset("train[0%:80%]", is_training=True, batch_size=64)   # Bug
@@ -171,7 +171,7 @@ test = load_dataset("test", is_training=False, batch_size=10000)
 params = avg_params = net.init(jax.random.PRNGKey(42), next(train))
 opt_state = opt.init(params)
 
-# Do not alter the number of steps
+# number of steps
 for step in range(10001):
   if step % 1000 == 0:
     val_accuracy = compute_accuracy(avg_params, next(validation))

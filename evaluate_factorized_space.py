@@ -3,7 +3,7 @@ def low_rank_net_fn(batch: Batch, rank: float) -> jnp.ndarray:
   x = normalize(batch[0])
   total_input_dim = np.prod(x.shape[1:])
 
-  # Do not alter the architecture code.
+  # architecture code.
   net = hk.Sequential([
       hk.Conv2D(output_channels=6*3, kernel_shape=(5,5)),
       jax.nn.relu,
@@ -53,13 +53,14 @@ for rank_fraction in np.arange(1.0, 0.0, -0.1):
       low_rank_params[layer] = params[layer]
       continue
     weight = params[layer]['w']
-    # TODO: complete coding the rank_approximated_weight function to compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
+
+    # rank_approximated_weight function to compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
     u, v = rank_approximated_weight(weight, rank_fraction)
     low_rank_params[vanilla_to_low_rank_map[layer][0]]['w'] = u
     low_rank_params[vanilla_to_low_rank_map[layer][1]]['w'] = v
     low_rank_params[vanilla_to_low_rank_map[layer][1]]['b'] = params[layer]['b']
   
-  # TODO: modify the compute_eval_metrics function below to compute the time taken for inference.
+  # compute the time taken for inference.
   test_accuracy, duration = compute_eval_metrics(low_rank_params, next(test), 50)
   ranks_and_times.append((rank_fraction, np.mean(duration)))
   ranks_and_accuracies.append((rank_fraction, np.mean(test_accuracy)))

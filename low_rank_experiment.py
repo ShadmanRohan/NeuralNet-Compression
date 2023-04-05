@@ -1,12 +1,12 @@
 from jax.scipy.linalg import svd
 
 def compute_eval_metrics(params, batch, n_samples):
-# TODO: add code to compute the time for inference.
+# compute the time for inference.
   duration_list = []
   accuracy_list = []
   for _ in range(n_samples):
     #start = 0.0
-    # TODO: add code to correctly compute the accuracy on a given batch.
+    # compute the accuracy on a given batch.
     start_time = time.time()
     acc = compute_accuracy(params, batch)
     duration = time.time() - start_time
@@ -16,7 +16,7 @@ def compute_eval_metrics(params, batch, n_samples):
   return accuracy_list, duration_list
 
  def rank_approximated_weight(weight: jnp.ndarray, rank_fraction: float):
-  # TODO: replace the code below with code to compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
+  # compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
   
   size = weight.shape[1]
 
@@ -45,14 +45,14 @@ for rank_fraction in np.arange(1.0, 0.0, -0.1):
     if 'conv' in layer:
       continue
     weight = params[layer]['w']
-    # TODO: complete coding the rank_approximated_weight function to compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
+    # rank_approximated_weight function to compute the SVD of the matrix to return the rank approximated weights u and v for a given matrix.
     u, v = rank_approximated_weight(weight, rank_fraction)
     rank_truncated_params[layer]['w'] = u@v
 
   test_batch = next(test)
   # we compute metrics over 50 samples to reduce noise in the measurement.
   n_samples = 50
-  # TODO: complete coding the compute_eval_metrics function to compute latency 50 seperate times given the batch passed to compute_eval_metrics. Return the average across all latencies you store.
+  # compute_eval_metrics function to compute latency 50 seperate times given the batch passed to compute_eval_metrics. Return the average across all latencies you store.
   test_accuracy, latency = compute_eval_metrics(rank_truncated_params, next(test), n_samples)
   print(f"Rank Fraction / Test accuracy: "
           f"{rank_fraction:.2f} / {np.mean(test_accuracy):.3f}.")
